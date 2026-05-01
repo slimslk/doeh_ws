@@ -1,6 +1,9 @@
 package net.dimmid.runnable;
 
+import net.dimmid.Main;
 import net.dimmid.service.IGameStateService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -11,6 +14,7 @@ public class PlayerEventProcessor implements Runnable{
     private final BlockingQueue<Map<String, String>> locationUpdatesQueue;
     private final BlockingQueue<Map<String, String>> gameUpdatesQueue;
     private final IGameStateService gameStateService;
+    private static final Logger logger = LoggerFactory.getLogger(PlayerEventProcessor.class);
 
     public PlayerEventProcessor(BlockingQueue<Map<String, String>> playerInfoQueue,
                                 BlockingQueue<Map<String, String>> locationUpdatesQueue,
@@ -43,7 +47,7 @@ public class PlayerEventProcessor implements Runnable{
                 }
             }
             catch (InterruptedException ex) {
-                System.err.println(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
             }
         }
     }

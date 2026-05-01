@@ -4,12 +4,15 @@ import net.dimmid.kafka.GameKafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 public class GameUpdatesConsumerImpl implements GameConsumer{
+    private static final Logger logger = LoggerFactory.getLogger(GameUpdatesConsumerImpl.class);
     private final KafkaConsumer<String, String> consumer;
     private final BlockingQueue<Map<String, String>> outputQueue;
 
@@ -27,10 +30,13 @@ public class GameUpdatesConsumerImpl implements GameConsumer{
     @Override
     public void processRecord(ConsumerRecord<String, String> record) {
         Map<String, String> map = Map.of("userId", record.key(), "value", record.value());
+//        for(Map.Entry<String, String> entry : map.entrySet()) {
+//           logger.info("CONSUMER - Game updates: {} {}", entry.getKey(), entry.getValue());
+//        }
         try {
             outputQueue.put(map);
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage(), ex);
         }
     }
 

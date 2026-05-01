@@ -5,6 +5,8 @@ import net.dimmid.config.Config;
 import net.dimmid.entity.PlayerEvent;
 import net.dimmid.kafka.GameKafkaProducer;
 import net.dimmid.util.JsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.util.Optional;
@@ -12,6 +14,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class EventProducer implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(EventProducer.class);
 
     private final GameKafkaProducer producer;
     private final BlockingQueue<PlayerEvent> eventInputQueue;
@@ -40,7 +43,7 @@ public class EventProducer implements Runnable {
                 }
             } catch ( JsonProcessingException | InterruptedException e) {
                 Thread.currentThread().interrupt();
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
         producer.close();

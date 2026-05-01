@@ -1,5 +1,8 @@
 package net.dimmid.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -11,12 +14,19 @@ public class Player {
     private List<Integer> position;
     private List<Integer> direction;
     private List<String> inventory;
+    private List<String> messages = new ArrayList<>();
+    @JsonProperty("location_id")
     private String locationId;
+    @JsonProperty("attack_modifier")
     private int attackModifier;
+    @JsonProperty("attack_damage")
     private int attackDamage;
     private int defence;
+    @JsonProperty("is_dead")
     private boolean isDead;
+    @JsonProperty("is_has_map")
     private boolean isHasMap;
+    @JsonProperty("is_sleep")
     private boolean isSleep;
 
     public Player(String id,
@@ -173,5 +183,13 @@ public class Player {
 
     public void setSleep(boolean sleep) {
         this.isSleep = sleep;
+    }
+
+    public List<String> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
     }
 }

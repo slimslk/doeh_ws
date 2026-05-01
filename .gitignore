@@ -2,4 +2,4 @@ target/
 .DS_Store
 .idea/
 *.properties
-!
+logs/

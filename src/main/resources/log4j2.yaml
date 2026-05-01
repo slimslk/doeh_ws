@@ -1,0 +1,41 @@
+Configuration:
+  status: WARN
+
+  Appenders:
+    Console:
+      name: ConsoleAppender
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "%d{HH:mm:ss.SSS} [%t] %highlight{%-5level} %logger{36} - %msg%n"
+
+    RollingFile:
+      name: FileAppender
+      fileName: "logs/app.log"
+      filePattern: "logs/app-%d{MM-dd-yyyy}-%i.log.gz"
+      MarkerFilter:
+        marker: "CONSOLE_ONLY"
+        onMatch: DENY
+        onMismatch: NEUTRAL
+      PatternLayout:
+        pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+      Policies:
+        SizeBasedTriggeringPolicy:
+          size: "10MB"
+        TimeBasedTriggeringPolicy:
+          interval: 1
+      DefaultRolloverStrategy:
+        max: 10
+
+  Loggers:
+    Logger:
+      - name: org.apache.kafka
+        level: WARN
+        additivity: false
+        AppenderRef:
+          - ref: ConsoleAppender
+          - ref: FileAppender
+    AsyncRoot:
+      level: INFO
+      AppenderRef:
+        - ref: FileAppender
+        - ref: ConsoleAppender

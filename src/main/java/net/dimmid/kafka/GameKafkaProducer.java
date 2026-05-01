@@ -7,11 +7,14 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.util.Properties;
 
 public class GameKafkaProducer {
+    private static final Logger logger = LoggerFactory.getLogger(GameKafkaProducer.class);
     private final Producer<String, String> producer;
 
     public GameKafkaProducer() throws FileNotFoundException {
@@ -26,6 +29,7 @@ public class GameKafkaProducer {
 
     public void produce(String topic, String key, String message) {
         ProducerRecord<String, String> record = new ProducerRecord<> (topic, key, message);
+        logger.info("PRODUCER - Sending message to topic {} with key {} and message {}", topic, key, message);
         producer.send(record);
     }
 
