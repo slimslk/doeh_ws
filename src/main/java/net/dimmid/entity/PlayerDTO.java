@@ -12,6 +12,7 @@ public record PlayerDTO(String id,
                         List<Integer> position,
                         List<Integer> direction,
                         List<String> inventory,
+                        List<String> message,
                         @JsonProperty("location_id")
                         String locationId,
                         @JsonProperty("attack_modifier")

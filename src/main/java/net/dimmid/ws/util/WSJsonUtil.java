@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import net.dimmid.ws.entity.User;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,10 +49,11 @@ public class WSJsonUtil {
         }
     }
 
-    public static String buildLogoutMessage(User user) {
-        ObjectNode jsonNodes = new ObjectNode(JsonNodeFactory.instance);
+    public static String buildLogoutMessage(User user) throws JsonProcessingException {
+        ObjectNode jsonNodes = MAPPER.createObjectNode();
         jsonNodes.put("user_id", user.userId());
         jsonNodes.put("action", "logout");
-        return jsonNodes.toString();
+        jsonNodes.putArray("params");
+        return MAPPER.writeValueAsString(jsonNodes);
     }
 }

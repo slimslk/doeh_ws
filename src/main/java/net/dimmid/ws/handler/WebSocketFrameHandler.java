@@ -2,10 +2,14 @@ package net.dimmid.ws.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.netty.channel.*;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import net.dimmid.ws.service.WebClientMessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebSocketFrameHandler extends SimpleChannelInboundHandler<Object> {
+    private final static Logger logger = LoggerFactory.getLogger(WebSocketFrameHandler.class);
 
     private final WebClientMessageService webClientMessageService;
 
@@ -22,7 +26,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws JsonProcessingException, InterruptedException {
-        System.err.println("Error for channel: " + ctx.channel() + ", cause: " + cause);
+        logger.error("Error for channel: {}. Cause: {}", ctx.channel(), cause);
+        ctx.writeAndFlush(new TextWebSocketFrame(
+            "Something went wrong, cause: " + cause.getMessage() + "Logging out to websocket."
+        ));
         webClientMessageService.closeChannel(ctx);
     }
 

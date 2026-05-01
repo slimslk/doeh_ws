@@ -1,7 +1,6 @@
 package net.dimmid.ws.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -11,12 +10,16 @@ import net.dimmid.util.JsonUtil;
 import net.dimmid.ws.entity.User;
 import net.dimmid.ws.util.WSAttributes;
 import net.dimmid.ws.util.WSJsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WebClientMessageService {
+    private final static Logger logger = LoggerFactory.getLogger(WebClientMessageService.class);
+
     private final BlockingQueue<PlayerEvent> eventInputQueue;
     private final ConcurrentHashMap<Channel, User> userChannels;
     private final IGameStateService gameStateService;
@@ -64,7 +67,6 @@ public class WebClientMessageService {
             registerUser(channel, user);
             String user_id = user.userId();
             gameStateService.addUser(user_id);
-//            json = String.format(GET_USER, user_id);
         }
         json = addUserIdToMessage(json,
                 ctx.channel().attr(WSAttributes.USER).get().userId());
@@ -94,7 +96,6 @@ public class WebClientMessageService {
             userChannels.remove(channel);
             return;
         }
-
         channel.write(new TextWebSocketFrame(userData))
                 .addListener(future -> {
                     if (!future.isSuccess()) {

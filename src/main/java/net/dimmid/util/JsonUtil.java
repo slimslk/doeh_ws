@@ -2,6 +2,7 @@ package net.dimmid.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dimmid.entity.Location;
 import net.dimmid.entity.Player;
@@ -12,7 +13,10 @@ import java.util.Map;
 
 public class JsonUtil {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .addMixIn(PlayerEvent.class, ClientEventMessageMixin.class)
+            .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true);
+//            .configure(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES, true);
 
     public static String playerEventToJson(PlayerEvent playerEvent) throws JsonProcessingException {
         MAPPER.addMixIn(PlayerEvent.class, ClientEventMessageMixin.class);

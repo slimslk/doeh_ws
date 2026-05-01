@@ -4,8 +4,14 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 public class WebSocketServer {
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketServer.class);
+    private static final Marker CONSOLE_ONLY = MarkerFactory.getMarker("CONSOLE_ONLY");
 
     private final int port;
     private Channel serverChannel;
@@ -28,7 +34,7 @@ public class WebSocketServer {
         ChannelFuture future = bootstrap.bind(port).sync();
         serverChannel = future.channel();
 
-        System.out.println("WebSocket server started at ws://localhost:" + port + "/ws");
+        logger.info(CONSOLE_ONLY, "WS Server started on port {}", port);
     }
 
     public void stop() {

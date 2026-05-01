@@ -8,12 +8,15 @@ import net.dimmid.entity.PlayerDTO;
 import net.dimmid.entity.PlayerEvent;
 import net.dimmid.util.JsonUtil;
 import net.dimmid.util.PlayerMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameStateServiceImpl implements IGameStateService {
+    private final static Logger logger = LoggerFactory.getLogger(GameStateServiceImpl.class);
 
     private final ConcurrentHashMap<String, Location> gameLocations = new ConcurrentHashMap<>();
 
@@ -53,7 +56,7 @@ public class GameStateServiceImpl implements IGameStateService {
             PlayerMapper.updatePlayerData(player, playerDTO);
             users.put(username, player);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -71,7 +74,7 @@ public class GameStateServiceImpl implements IGameStateService {
                 locUpdates.putAll(updates);
             }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -82,7 +85,7 @@ public class GameStateServiceImpl implements IGameStateService {
             gameLocations.put(locationId, location);
             requestedMap.remove(locationId);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -119,7 +122,7 @@ public class GameStateServiceImpl implements IGameStateService {
                             continue;
                         }
                         catch (InterruptedException e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                         }
                     }
                     gameUpdates = JsonUtil.locationToJson(location);
@@ -128,6 +131,16 @@ public class GameStateServiceImpl implements IGameStateService {
                 locationData = JsonUtil.locationUpdateToJson(locationUpdates.get(locationId));
             }
             result = combinePlayerStatsAndLocationUpdates(playerData, locationData, gameUpdates);
+            if (locationData != null) {
+                logger.info("WS - SEND TO User: {}, location data: {}", userId, locationData);
+            }
+            if (gameUpdates != null) {
+                logger.info("WS - SEND TO User: {}, gameUpdates: {}", userId, gameUpdates);
+            }
+            if (!player.getMessages().isEmpty()){
+                logger.debug("Player messages: {}", player.getMessages());
+                player.getMessages().clear();
+            }
             userMessages.put(userId, result);
         }
         return userMessages;

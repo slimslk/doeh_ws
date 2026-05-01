@@ -17,6 +17,8 @@ import net.dimmid.service.GameStateServiceImpl;
 import net.dimmid.service.IGameStateService;
 import net.dimmid.ws.WebSocketServer;
 import net.dimmid.ws.service.WebClientMessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,7 +33,7 @@ public class Main {
     private static UpdatesThreadManager updatesThreadManager;
     private static GameStateBroadcasterThreadManager gameStateBroadcasterThreadManager;
     private static WebSocketServer server;
-
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
         try {
@@ -48,7 +50,7 @@ public class Main {
             Thread.currentThread().join();
 
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+            logger.error("Application shutting down", e);
         } finally {
             shutdown();
         }
