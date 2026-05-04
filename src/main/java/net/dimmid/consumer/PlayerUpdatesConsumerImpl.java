@@ -31,9 +31,6 @@ public class PlayerUpdatesConsumerImpl implements GameConsumer {
     @Override
     public void processRecord(ConsumerRecord<String, String> record) {
         Map<String, String> map = Map.of("userId", record.key(), "value", record.value());
-        for(Map.Entry<String, String> entry : map.entrySet()) {
-            logger.trace("CONSUMER - Player updates: {} {}", entry.getKey(), entry.getValue());
-        }
         try {
             outputQueue.put(map);
         }

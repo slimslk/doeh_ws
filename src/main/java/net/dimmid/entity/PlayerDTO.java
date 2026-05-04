@@ -21,7 +21,7 @@ public record PlayerDTO(String id,
                         int attackDamage,
                         int defence,
                         @JsonProperty("is_dead")
-                        boolean isDead,
+                        boolean dead,
                         @JsonProperty("is_sleep")
-                        boolean isSleep) {
+                        boolean sleep) {
 }

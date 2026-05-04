@@ -10,7 +10,7 @@ public class PlayerMapper {
         player.setName(playerDTO.name());
         player.setHealth(playerDTO.health());
         player.setPosition(playerDTO.position());
-        player.setDead(player.isDead());
+        player.setDead(playerDTO.dead());
         player.setDirection(playerDTO.direction());
         player.setEnergy(playerDTO.energy());
         player.setHungry(playerDTO.hungry());
@@ -19,7 +19,7 @@ public class PlayerMapper {
         player.setAttackModifier(playerDTO.attackModifier());
         player.setAttackDamage(playerDTO.attackDamage());
         player.setDefence(playerDTO.defence());
-        player.setSleep(playerDTO.isSleep());
+        player.setSleep(playerDTO.sleep());
         player.setMessages(playerDTO.message());
     }
 }

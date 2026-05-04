@@ -132,10 +132,10 @@ public class GameStateServiceImpl implements IGameStateService {
             }
             result = combinePlayerStatsAndLocationUpdates(playerData, locationData, gameUpdates);
             if (locationData != null) {
-                logger.info("WS - SEND TO User: {}, location data: {}", userId, locationData);
+                logger.debug("WS - SEND TO User: {}, location data: {}", userId, locationData);
             }
             if (gameUpdates != null) {
-                logger.info("WS - SEND TO User: {}, gameUpdates: {}", userId, gameUpdates);
+                logger.debug("WS - SEND TO User: {}, gameUpdates: {}", userId, gameUpdates);
             }
             if (!player.getMessages().isEmpty()){
                 logger.debug("Player messages: {}", player.getMessages());

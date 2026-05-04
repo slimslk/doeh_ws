@@ -23,11 +23,11 @@ public class Player {
     private int attackDamage;
     private int defence;
     @JsonProperty("is_dead")
-    private boolean isDead;
+    private boolean dead;
     @JsonProperty("is_has_map")
-    private boolean isHasMap;
+    private boolean hasMap;
     @JsonProperty("is_sleep")
-    private boolean isSleep;
+    private boolean sleep;
 
     public Player(String id,
                   String name,
@@ -41,9 +41,9 @@ public class Player {
                   int attackModifier,
                   int attackDamage,
                   int defence,
-                  boolean isDead,
-                  boolean isSleep,
-                  boolean isHasMap) {
+                  boolean dead,
+                  boolean sleep,
+                  boolean hasMap) {
         this.id = id;
         this.name = name;
         this.health = health;
@@ -53,12 +53,12 @@ public class Player {
         this.direction = direction;
         this.inventory = inventory;
         this.locationId = locationId;
-        this.isDead = isDead;
+        this.dead = dead;
         this.attackModifier = attackModifier;
         this.attackDamage = attackDamage;
         this.defence = defence;
-        this.isHasMap = isHasMap;
-        this.isSleep = isSleep;
+        this.hasMap = hasMap;
+        this.sleep = sleep;
     }
 
     public Player() {
@@ -114,11 +114,11 @@ public class Player {
     }
 
     public boolean isDead() {
-        return isDead;
+        return dead;
     }
 
     public boolean isSleep() {
-        return isSleep;
+        return sleep;
     }
 
     public void setId(String id) {
@@ -158,7 +158,7 @@ public class Player {
     }
 
     public void setDead(boolean dead) {
-        isDead = dead;
+        this.dead = dead;
     }
 
     public void setAttackDamage(int attackDamage) {
@@ -174,15 +174,15 @@ public class Player {
     }
 
     public boolean isHasMap() {
-        return isHasMap;
+        return hasMap;
     }
 
     public void setHasMap(boolean hasMap) {
-        isHasMap = hasMap;
+        this.hasMap = hasMap;
     }
 
     public void setSleep(boolean sleep) {
-        this.isSleep = sleep;
+        this.sleep = sleep;
     }
 
     public List<String> getMessages() {
