@@ -1,39 +1,58 @@
-## DoEH: Domains of Endless Hunger (WebSocket Server)
+# DoEH: Domains of Endless Hunger
+## WebSocket Gateway Service (Java/Netty)
 
-### To run the service, the following environment variables are required.
-A sample configuration file for running locally can be found at `src/main/resources/config_dev.properties`
-```
-#Main settings
-ws.port=[websocket_port]
-debug=[false/true]
+A high-performance, asynchronous gateway responsible for real-time bidirectional communication between clients and the game ecosystem.
 
-#Kafka Settings
-acks=1
-bootstrap.servers=[kafka_bootstrap_server:server_port]
-security.protocol=[You kafka server security protocol]
+### Overview
+This service acts as the primary entry point for all persistent client connections. Built with **Netty**, it ensures low-latency data transmission and manages the lifecycle of thousands of concurrent WebSocket connections using a non-blocking I/O model.
 
-ssl.keystore.type=[SSL_Keystore_type - Optional]
-ssl.keystore.location=[SSL Keystore Location - Optional]
-ssl.keystore.password=[SSL Keystore Password - Optional]
+### Key Technical Features
+*   **High-Concurrency Networking**: Implements **Netty (NIO)** for superior performance and efficient resource management under heavy load.
+*   **Reactive Messaging Bridge**: Translates incoming WebSocket client actions into **Apache Kafka** events and broadcasts server-side updates back to the users.
+*   **Production-Ready Security**:
+    *   **JWT Authentication**: Secure handshake process using JSON Web Tokens.
+    *   **SSL/TLS Support**: Configurable security protocols for encrypted communication with Kafka brokers.
+*   **Scalability**: Stateless architecture designed for containerized environments (Docker).
 
-ssl.truststore.location=[SSL Truststore Location - Optional]
-ssl.truststore.password=[SSL Truststore Password - Optional]
+### Tech Stack
+*   **Language:** Java 21
+*   **Network Engine:** Netty
+*   **Messaging:** Apache Kafka
+*   **Security:** JWT, SSL/TLS
+*   **Containerization:** Docker
 
-session.timeout.ms=[Kafka Session timeout in ms]
-auto.offset.reset=[Kafka auto offset reset]
-enable.auto.commit=[Kafka auto commit]
-retries=[Kafka retries]
-retry.backoff.ms=[Kafka backoff in ms]
-delivery.timeout.ms=[Kafka delivery timeout in ms]
-reconnect.backoff.max.ms=[Kafka reconnect backoff maximum ms]
+---
 
-#Kafka Topics
-player.event.topic=player-event
-player.updates.topic=player-update
-location.updates.topic=location-update
-game.updates.topic=game-update
-game.round.time=125
+## Configuration & Deployment
 
-#JWT
-jwt.token=[JWT Token Signing Key HMAC-SHA256/SHA512]
+The service is highly flexible and configured via environment variables. It is crucial that the Kafka topics match the configuration of the **Game Server** to ensure proper data flow.
+
+### Configurable Message Broker Topics
+The service dynamically routes data through topics defined in the configuration:
+* **Upstream (Client → Server):**
+    * `player.event.topic`: Receives raw player actions and pushes them to the game logic engine.
+* **Downstream (Server → Client):**
+    * `player.updates.topic`, `location.updates.topic`, `game.updates.topic`: Consumes processed game state updates to broadcast them to active WebSocket channels.
+
+### Environment Variables
+| Category | Variable | Description |
+| :--- | :--- | :--- |
+| **Main** | `ws.port` | Port for the WebSocket server |
+| **Kafka** | `bootstrap.servers` | Kafka broker addresses |
+| **Kafka** | `security.protocol` | Security protocol (e.g., SSL, SASL_SSL) |
+| **JWT** | `jwt.token` | Signing key for HMAC-SHA256/SHA512 token validation |
+
+---
+
+## Getting Started
+
+### Building with Docker
+The service includes a `Dockerfile` for easy containerization:
+
+```bash
+# Build the image
+docker build -t websocket-gateway .
+
+# Run the container
+docker run -p 8080:8080 -e ws.port=8080 websocket-gateway
 ```
